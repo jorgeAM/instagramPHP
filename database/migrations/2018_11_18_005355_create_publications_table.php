@@ -16,7 +16,7 @@ class CreatePublicationsTable extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->increments('id');
             $table->string('body');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')
                 ->on('users')
