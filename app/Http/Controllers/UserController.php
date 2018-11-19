@@ -17,7 +17,7 @@ class UserController extends Controller
     return response()->json(['users' => $users]);
   }
 
-  public function login(Request $request)
+  public function saveUser(Request $request)
   {
     $this->validate($request, [
         'name' => 'required',
