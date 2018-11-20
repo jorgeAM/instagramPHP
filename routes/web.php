@@ -21,6 +21,12 @@ $router->group(['prefix' => 'api', 'middleware' => 'jwt.auth'],  function () use
   $router->put('/users/{id}', 'UserController@updateUser');
   $router->delete('/users/{id}', 'UserController@deleteUser');
   $router->post('/users/{id}/avatar', 'UserController@uploadAvatar');
+
+  $router->get('/publications', 'PublicationController@getPublications');
+  $router->get('/publications/{id}', 'PublicationController@getPublication');
+  $router->post('/publications', 'PublicationController@savePublication');
+  $router->put('/publications/{id}', 'PublicationController@updatePublication');
+  $router->post('/publications/{id}/image', 'PublicationController@uploadImageToPublication');
 });
 
 $router->group(['prefix' => 'api'],  function () use ($router) {
