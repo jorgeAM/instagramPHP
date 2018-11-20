@@ -118,9 +118,15 @@ class UserController extends Controller
       $picName = $request->file('avatar')->getClientOriginalName();
       if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png') {
         $picName = time() . '.' . $extension;
-        $destinationPath = 'storage/app/users';
+        $destinationPath = 'uploads/users';
+        if ($user->avatar) {
+          unlink('uploads/users/' . $user->avatar);
+        }
+
         $request->file('avatar')->move($destinationPath, $picName);
-       return response()->json(['message' => 'Se subio la imagen']);
+        $user->avatar = $picName;
+        $user->save();
+        return response()->json(['user' => $user]);
       }
       return response()->json(['message' => 'Solo puedes subir imagenes en formato JPG o PNG']);
 
@@ -128,4 +134,5 @@ class UserController extends Controller
      return response()->json(['message' => 'No has seleccionado una imagen']);
    }
   }
+
 }
