@@ -39,7 +39,7 @@ class UserController extends Controller
 
   public function getUser($id)
   {
-    $user = User::find($id);
+    $user = User::with('publications')->find($id);
     if ($user == null) {
       return response()->json(['message' => 'No existe usuario']);
     }
