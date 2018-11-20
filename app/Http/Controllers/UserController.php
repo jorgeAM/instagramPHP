@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use Firebase\JWT\ExpiredException;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -65,4 +68,38 @@ class UserController extends Controller
     $user->delete();
     return response()->json(['message' => 'Usuario eliminado']);
   }
+
+  public function login(Request $request)
+  {
+    $this->validate($request, [
+        'email' => 'required|email',
+        'password' => 'required|min:6'
+      ]);
+
+    $user = User::where('email', $request->email)->first();
+    if ($user == null) {
+      return response()->json(['message' => 'Usuario no existe'], 400);
+    }
+
+    if (Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'token' => $this->jwt($user)
+            ], 200);
+    }
+
+    return response()->json(['message' => 'Contraseña incorrecta'], 400);
+  }
+
+  protected function jwt(User $user)
+  {
+    $payload = [
+      'iss' => "lumen-jwt", // Issuer of the token
+      'sub' => $user->id, // Subject of the token
+      'iat' => time(), // Time when JWT was issued.
+      'exp' => time() + (7 * 24 * 60 * 60) // Expiration time
+    ];
+
+    return JWT::encode($payload, env('JWT_SECRET'));
+  }
+
 }
