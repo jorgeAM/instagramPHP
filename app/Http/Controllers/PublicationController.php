@@ -32,7 +32,7 @@ class PublicationController extends Controller
 
   public function getPublication($id)
   {
-    $publication = Publication::find($id);
+    $publication = Publication::with('user')->find($id);
     if ($publication == null) {
       return response()->json(['message' => 'No existe publicación']);
     }
