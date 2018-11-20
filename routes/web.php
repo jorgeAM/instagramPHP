@@ -20,7 +20,10 @@ $router->group(['prefix' => 'api', 'middleware' => 'jwt.auth'],  function () use
   $router->get('/users/{id}', 'UserController@getUser');
   $router->put('/users/{id}', 'UserController@updateUser');
   $router->delete('/users/{id}', 'UserController@deleteUser');
+  $router->post('/users/{id}/avatar', 'UserController@uploadAvatar');
 });
 
-$router->post('/api/users', 'UserController@saveUser');
-$router->post('/login', 'UserController@login');
+$router->group(['prefix' => 'api'],  function () use ($router) {
+  $router->post('/sign-in', 'UserController@saveUser');
+  $router->post('/login', 'UserController@login');
+});

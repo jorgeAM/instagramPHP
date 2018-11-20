@@ -102,4 +102,30 @@ class UserController extends Controller
     return JWT::encode($payload, env('JWT_SECRET'));
   }
 
+  public function uploadAvatar($id, Request $request)
+  {
+    if ($request->auth->id != $id) {
+      return response()->json(['message' => 'No puedes modificar un usuario que no sea el tuyo']);
+    }
+
+    $user = User::find($id);
+    if ($user == null) {
+      return response()->json(['message' => 'No existe usuario']);
+    }
+
+    if($request->file('avatar')){
+      $extension = $request->file('avatar')->getClientOriginalExtension();
+      $picName = $request->file('avatar')->getClientOriginalName();
+      if ($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png') {
+        $picName = time() . '.' . $extension;
+        $destinationPath = 'storage/app/users';
+        $request->file('avatar')->move($destinationPath, $picName);
+       return response()->json(['message' => 'Se subio la imagen']);
+      }
+      return response()->json(['message' => 'Solo puedes subir imagenes en formato JPG o PNG']);
+
+   }else {
+     return response()->json(['message' => 'No has seleccionado una imagen']);
+   }
+  }
 }
