@@ -16,6 +16,9 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api', 'middleware' => 'jwt.auth'],  function () use ($router) {
+  $router->post('/follow', 'FollowController@follow');
+  $router->delete('/unfollow', 'FollowController@unFollow');
+
   $router->get('/users', 'UserController@getUsers');
   $router->get('/users/{id}', 'UserController@getUser');
   $router->put('/users/{id}', 'UserController@updateUser');

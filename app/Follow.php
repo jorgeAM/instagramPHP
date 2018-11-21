@@ -10,6 +10,8 @@ class Follow extends Model
         'user_id', 'follower_id'
     ];
 
+    public $timestamps = false;
+    
     public function user()
     {
         return $this->belongsTo('App\User');
