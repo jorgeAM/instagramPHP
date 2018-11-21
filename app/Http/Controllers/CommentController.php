@@ -15,7 +15,7 @@ class CommentController extends Controller
       return response()->json(['message' => 'No existe publicación']);
     }
 
-    $comments = Comment::where('publication_id', $publicationId)->get();
+    $comments = Comment::with('user')->where('publication_id', $publicationId)->get();
     return response()->json(['comments' => $comments]);
   }
 
@@ -50,6 +50,10 @@ class CommentController extends Controller
     }
 
     $comment = Comment::find($commentId);
+    if ($comment == null) {
+      return response()->json(['message' => 'No existe comentario']);
+    }
+
     if ($request->auth->id != $comment->user_id) {
       return response()->json(['message' => 'Solo puedes editar tus propios comentarios']);
     }
@@ -66,6 +70,10 @@ class CommentController extends Controller
     }
 
     $comment = Comment::find($commentId);
+    if ($comment == null) {
+      return response()->json(['message' => 'No existe comentario']);
+    }
+
     if ($request->auth->id != $comment->user_id) {
       return response()->json(['message' => 'Solo puedes eliminar tus propios comentarios']);
     }
